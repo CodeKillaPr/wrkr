@@ -1,0 +1,28 @@
+/* Estilo del gradiente oscuro */
+.bg-dark-gradient {
+	background: #1f2838;
+	background: linear-gradient(135deg,
+			#1f2838 25%,
+			#374151 25%,
+			#374151 50%,
+			#1f2838 50%,
+			#1f2838 75%,
+			#374151 75%,
+			#374151);
+	background-size: 40px 40px;
+}
+
+/* Animación */
+@keyframes move {
+	0% {
+		background-position: 0 0;
+	}
+
+	100% {
+		background-position: 40px 40px;
+	}
+}
+
+.animate-move {
+	animation: move 4s linear infinite;
+}
