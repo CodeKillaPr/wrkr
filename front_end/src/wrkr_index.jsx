@@ -9,14 +9,17 @@ function Worker() {
     const menuToggle = document.getElementById("menu-toggle");
     const sideMenu = document.getElementById("side-menu");
     const mainContent = document.getElementById("main-content");
+    const footerContent = document.getElementById("footer-container");
 
     if (menuToggle) {
       menuToggle.addEventListener("change", function () {
         if (this.checked) {
           sideMenu.classList.remove("-translate-x-full");
           mainContent.classList.add("blur");
+          footerContent.classList.add("blur");
         } else {
           sideMenu.classList.add("-translate-x-full");
+          footerContent.classList.remove("blur");
           mainContent.classList.remove("blur");
         }
       });
@@ -84,18 +87,15 @@ function Worker() {
   return (
     <>
       <div>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link
           href="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css"
           rel="stylesheet"
         />
         <script src="https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.js" />
-        <title>Document</title>
       </div>
 
       <div className="relative z-10 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-        <div lang="en">
+        <div>
           <label
             htmlFor="menu-toggle"
             id="menu"
@@ -109,25 +109,24 @@ function Worker() {
             </div>
           </label>
 
-          <main id="main-content" className="relative z-20">
+          <main id="main-content" className="relative z-0">
             <div id="map" className="w-screen h-screen"></div>
             <button
               id="find-me"
-              className="absolute bottom-64 right-4 hover:scale-110  bg-blue-500 bg-opacity-50 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-500 py-2 px-4 rounded-lg shadow-lg"
+              className="absolute bottom-64 right-4 hover:scale-110 bg-blue-500 bg-opacity-50 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-500 py-2 px-4 rounded-lg shadow-lg"
             >
               Find Me
             </button>
             {showJobList && (
               <div
                 id="job-card"
-                className="absolute top-1/2 left-1/2 transform hover:scale-110  duration-500 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96"
+                className="absolute top-1/2 left-1/2 transform hover:scale-110 duration-500 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96"
               >
                 <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
                   Lista de Empleos
                 </h2>
-
                 <ul className="space-y-4">
-                  <li className="bg-gray-100 hover:scale-110  duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md">
+                  <li className="bg-gray-100 hover:scale-110 duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md">
                     <h3 className="font-semibold text-gray-800 dark:text-gray-200">
                       Mamadora
                     </h3>
@@ -138,8 +137,7 @@ function Worker() {
                       Aplicar
                     </button>
                   </li>
-
-                  <li className="bg-gray-100 hover:scale-110  duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md">
+                  <li className="bg-gray-100 hover:scale-110 duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md">
                     <h3 className="font-semibold text-gray-800 dark:text-gray-200">
                       Empeñador de culo
                     </h3>
@@ -150,7 +148,6 @@ function Worker() {
                       Aplicar
                     </button>
                   </li>
-
                   <li className="bg-gray-100 hover:scale-110 duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md">
                     <h3 className="font-semibold text-gray-800 dark:text-gray-200">
                       Runner
@@ -165,20 +162,6 @@ function Worker() {
                 </ul>
               </div>
             )}
-            {/* <div
-              id="chat-box"
-              className="absolute top-1/2 left-1/2 transform duration-500 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96"
-            >
-              <div
-                id="booking-box"
-                className="absolute top-1/2 left-1/2 transform hover:scale-110  duration-500 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96"
-              >
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                  Agenda
-                </h3>
-                <input type="month" className="text-black" />
-              </div>
-            </div> */}
           </main>
 
           <aside
@@ -225,75 +208,77 @@ function Worker() {
               </li>
             </ul>
           </aside>
-
-          <footer className="fixed bottom-5 left-0 right-0 z-30">
-            <div
-              id="bottom-menu"
-              className="flex items-center justify-between bg-blue-500 bg-opacity-80 backdrop-blur-md rounded-full px-6 py-3 shadow-lg max-w-md mx-auto transition-all duration-300 hover:shadow-xl hover:bg-opacity-90"
-            >
-              <button
-                id="show-table"
-                onClick={() => setShowJobList(!showJobList)}
-                className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800"
-              >
-                <svg
-                  className="w-[24px] h-[24px] text-gray-800 dark:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Zm-3 8a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Zm2 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-              <button className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800">
-                <svg
-                  className="w-[24px] h-[24px] text-gray-800 dark:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M7 2a2 2 0 0 0-2 2v1a1 1 0 0 0 0 2v1a1 1 0 0 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H7Zm3 8a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm-1 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-              <button className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800">
-                <svg
-                  className="w-[24px] h-[24px] text-gray-800 dark:text-white"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h1v2a1 1 0 0 0 1.707.707L9.414 13H15a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4Z"
-                    clipRule="evenodd"
-                  />
-                  <path
-                    fillRule="evenodd"
-                    d="M8.023 17.215c.033-.03.066-.062.098-.094L10.243 15H15a3 3 0 0 0 3-3V8h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-1v2a1 1 0 0 1-1.707.707L14.586 18H9a1 1 0 0 1-.977-.785Z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          </footer>
         </div>
+        <footer
+          id="footer-container"
+          className="fixed bottom-5 left-0 right-0 z-10"
+        >
+          <div
+            id="bottom-menu"
+            className="flex items-center justify-between bg-blue-500 bg-opacity-80 backdrop-blur-md rounded-full px-6 py-3 shadow-lg max-w-md mx-auto transition-all duration-300 hover:shadow-xl hover:bg-opacity-90"
+          >
+            <button
+              id="show-table"
+              onClick={() => setShowJobList(!showJobList)}
+              className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800"
+            >
+              <svg
+                className="w-[24px] h-[24px] text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Zm-3 8a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Zm2 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            <button className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800">
+              <svg
+                className="w-[24px] h-[24px] text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M7 2a2 2 0 0 0-2 2v1a1 1 0 0 0 0 2v1a1 1 0 0 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a1 1 0 1 0 0 2v1a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H7Zm3 8a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm-1 7a3 3 0 0 1 3-3h2a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-6a1 1 0 0 1-1-1Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+            <button className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800">
+              <svg
+                className="w-[24px] h-[24px] text-gray-800 dark:text-white"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4 3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h1v2a1 1 0 0 0 1.707.707L9.414 13H15a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4Z"
+                  clipRule="evenodd"
+                />
+                <path
+                  fillRule="evenodd"
+                  d="M8.023 17.215c.033-.03.066-.062.098-.094L10.243 15H15a3 3 0 0 0 3-3V8h2a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-1v2a1 1 0 0 1-1.707.707L14.586 18H9a1 1 0 0 1-.977-.785Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </footer>
       </div>
     </>
   );
