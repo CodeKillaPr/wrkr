@@ -558,6 +558,19 @@ video {
 	display: none;
 }
 
+/* Añade esto a tu archivo CSS */
+.hide-scrollbar {
+	-ms-overflow-style: none;
+	/* IE and Edge */
+	scrollbar-width: none;
+	/* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+	display: none;
+	/* Chrome, Safari, and Opera */
+}
+
 /* styles.css */
 .scrollbar-hide::-webkit-scrollbar {
 	display: none;
