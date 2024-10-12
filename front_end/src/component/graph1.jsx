@@ -9,7 +9,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import PropTypes from "prop-types";
 
 // Registrar los componentes de Chart.js
 ChartJS.register(
@@ -22,44 +21,22 @@ ChartJS.register(
   Legend
 );
 
-const Job = ({ jobCount }) => {
-  // Get current month and next 5 months
-  const currentMonthIndex = new Date().getMonth();
-  const monthNames = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ];
-  const months = Array.from(
-    { length: 6 },
-    (_, i) => monthNames[(currentMonthIndex + i) % 12]
-  );
-
-  const jobCounts = [jobCount, 10, 20, 50, 30, 15]; // Initialize with jobCount for the current month
-  // Chart data
+function Graph() {
+  // Datos del gráfico
   const data = {
-    labels: months,
+    labels: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio"],
     datasets: [
       {
-        label: "Datos de Empleos",
-        data: jobCounts, // Initialize with jobCount for the current month
+        label: "Datos de Contratos",
+        data: [8, 10, 40, 8, 16, 12],
         fill: false,
-        backgroundColor: "#00b3ff",
-        borderColor: "#00b3ff",
+        backgroundColor: "#3772d1",
+        borderColor: "#3772d1",
       },
     ],
   };
 
-  // Chart options
+  // Opciones del gráfico
   const options = {
     responsive: true,
     maintainAspectRatio: false, // Esto permite controlar mejor la altura de la gráfica
@@ -85,7 +62,7 @@ const Job = ({ jobCount }) => {
       y: {
         beginAtZero: true, // Asegura que comience desde 0
         min: 0, // Establecer valor mínimo en 0
-        max: 50, // Valor máximo en 20
+        max: 100, // Valor máximo en 20
         ticks: {
           stepSize: 5, // Espaciado entre los ticks
           color: "white",
@@ -100,14 +77,11 @@ const Job = ({ jobCount }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 bg-yellow-500 rounded-lg h-[16rem]">
+    <div className="w-full max-w-4xl mx-auto p-4 bg-gray-700 rounded-lg h-52">
+      {/* Ajustar la altura de la gráfica */}
       <Line data={data} options={options} />
     </div>
   );
-};
+}
 
-Job.propTypes = {
-  jobCount: PropTypes.number.isRequired,
-};
-
-export default Job;
+export default Graph;
