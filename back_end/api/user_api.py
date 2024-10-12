@@ -31,8 +31,9 @@ def login():
     if not user.check_password(password):
         abort(401, description="Invalid password")
 
-    access_token = create_access_token(identity=user.id, additional_claims={
-                                       "is_admin": user.is_admin})
+    additional_claims = {"is_admin": user.is_admin}
+    access_token = create_access_token(
+        identity=user.id, additional_claims=additional_claims)
 
     return jsonify(access_token=access_token, is_admin=user.is_admin), 200
 
