@@ -1,46 +1,18 @@
 from flask import Blueprint, jsonify, abort, request
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt_identity
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from model.user import User
 from database.db import db
 from flask_bcrypt import Bcrypt
 import base64
+from database.firebase_config import firedb
+import uuid
 
 user_api = Blueprint('user_api', __name__)
 bcrypt = Bcrypt()
 
 
-@user_api.route('/protected', methods=['GET'])
-@jwt_required()
-def protected():
-    current_user_id = get_jwt_identity()
-    return jsonify(logged_in_as=current_user_id), 200
-
-
-@user_api.route('/login', methods=['POST'])
-def login():
-    if not request.json or 'email' not in request.json or 'password' not in request.json:
-        abort(400, description="Missing required fields")
-
-    email = request.json['email']
-    password = request.json['password']
-    user = User.query.filter_by(email=email).first()
-
-    if user is None:
-        abort(401, description="User not found or invalid email")
-
-    if not user.check_password(password):
-        abort(401, description="Invalid password")
-
-    additional_claims = {"is_admin": user.is_admin}
-    access_token = create_access_token(
-        identity=user.id, additional_claims=additional_claims)
-
-    return jsonify(access_token=access_token, is_admin=user.is_admin), 200
-
-
 @user_api.route('/register', methods=['POST'])
 def create_user():
-
     if not request.json or 'email' not in request.json or 'password' not in request.json:
         abort(400, description="Missing required fields")
 
@@ -48,14 +20,14 @@ def create_user():
     if '@' not in email:
         abort(400, description="Invalid email format")
 
-    if User.query.filter_by(email=email).first():
+    if User.query_by_email(email):
         abort(409, description="Email already exists")
 
     user = User(
+        id=str(uuid.uuid4()),
         email=email,
         password=request.json['password'],
         is_admin=request.json.get('is_admin', False),
-        password_hash=request.json.get('password_hash', ''),
         first_name=request.json.get('first_name', ''),
         last_name=request.json.get('last_name', ''),
         card_id=request.json.get('card_id', None),
@@ -67,13 +39,75 @@ def create_user():
         certification=base64.b64decode(request.json.get('certification', '').encode(
             'utf-8')) if request.json.get('certification') else b'',
     )
-    db.session.add(user)
-    db.session.commit()
+    user.save()
+
+    if firedb:
+        user_data = {
+            "id": user.id,
+            "is_admin": user.is_admin,
+            "email": user.email,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "contact": user.contact,
+            "resume": base64.b64encode(user.resume).decode('utf-8') if user.resume else None,
+            "picture": base64.b64encode(user.picture).decode('utf-8') if user.picture else None,
+            "certification": base64.b64encode(user.certification).decode('utf-8') if user.certification else None,
+            "password_hash": user.password_hash
+        }
+
+        firedb.collection('users').document(str(user.email)).set(user_data)
+
     return jsonify({"msg": "User created successfully", "welcome": user.first_name}), 201
 
 
-@user_api.route('/user/update', methods=['PUT'])
-@jwt_required()
+@user_api.route('/login', methods=['POST'])
+def login():
+    if not request.json or 'email' not in request.json or 'password' not in request.json:
+        abort(400, description="Missing required fields")
+
+    email = request.json['email']
+    password = request.json['password']
+    user = User.query_by_email(email)
+
+    if user is None:
+        abort(401, description="User not found or invalid email")
+
+    # Asegúrate de que `user` es una instancia de User
+    if isinstance(user, dict):
+        # Extrae los campos correctos del diccionario
+        user_fields = {
+            'id': user.get('id'),
+            'email': user.get('email'),
+            'password_hash': user.get('password_hash'),
+            'is_admin': user.get('is_admin', False),
+            'first_name': user.get('first_name', ''),
+            'last_name': user.get('last_name', ''),
+            'card_id': user.get('card_id'),
+            'resume': base64.b64decode(user.get('resume').encode('utf-8')) if user.get('resume') else None,
+            'picture': base64.b64decode(user.get('picture').encode('utf-8')) if user.get('picture') else None,
+            'certification': base64.b64decode(user.get('certification').encode('utf-8')) if user.get('certification') else None
+        }
+        user = User(**user_fields)
+
+    if not user.check_password(password):
+        abort(401, description="Invalid password")
+
+    additional_claims = {"is_admin": user.is_admin}
+    access_token = create_access_token(
+        identity=user.id, additional_claims=additional_claims)
+
+    return jsonify(access_token=access_token, is_admin=user.is_admin), 200
+
+
+@ user_api.route('/protected', methods=['GET'])
+@ jwt_required()
+def protected():
+    current_user_id = get_jwt_identity()
+    return jsonify(logged_in_as=current_user_id), 200
+
+
+@ user_api.route('/user/update', methods=['PUT'])
+@ jwt_required()
 def update_user():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
@@ -85,8 +119,7 @@ def update_user():
         abort(400, description="Missing required fields")
 
     user.email = request.json.get('email', user.email)
-    user.first_name = request.json.get(
-        'first_name', user.first_name)
+    user.first_name = request.json.get('first_name', user.first_name)
     user.last_name = request.json.get('last_name', user.last_name)
     user.contact = request.json.get('contact', user.contact)
 
@@ -103,19 +136,6 @@ def update_user():
         user.password = bcrypt.generate_password_hash(
             request.json['password']).decode('utf-8')
 
-    # Los siguientes campos NO deben ser actualizables por el usuario, por lo tanto los excluimos:
-    # user.is_admin
-    # user.password_hash
-
     db.session.commit()
 
     return jsonify({"msg": "User updated successfully"}), 200
-
-
-@ user_api.route('/user', methods=['GET'])
-def get_users():
-
-    users = User.query.all()
-    if not users:
-        abort(404, description="No users found")
-    return jsonify([user.to_dict() for user in users]), 200
