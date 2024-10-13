@@ -6,14 +6,26 @@ import WorkPost from "./component/work_post";
 
 function Patron() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [activeComponent, setActiveComponent] = useState(null); // Controla qué componente está visible
 
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
 
   const handleJobPostClick = () => {
-    setIsPopupVisible(!isPopupVisible);
+    if (activeComponent === "workPost") {
+      setActiveComponent(null); // Cierra el componente si ya está abierto
+    } else {
+      setActiveComponent("workPost"); // Abre WorkPost
+    }
+  };
+
+  const handleStatisticClick = () => {
+    if (activeComponent === "statistic") {
+      setActiveComponent(null); // Cierra el componente si ya está abierto
+    } else {
+      setActiveComponent("statistic"); // Abre Statistics
+    }
   };
 
   useEffect(() => {
@@ -104,34 +116,55 @@ function Patron() {
             id="main-content"
             className="transition-all duration-300 text-white scrollbar-hide overflow-y-scroll pt-20 h-[calc(100vh-1rem)] w-full"
           >
-            <Statistics />
+            {/* Statistic Section */}
+            <div
+              className={`ftransition-all text-white scrollbar-hide overflow-y-scroll pt-0 h-[calc(100vh-1rem)] w-full bg-opacity-100 duration-500 ease-in-out ${
+                activeComponent === "statistic"
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <div
+                className={`relative  transform transition-transform duration-500 ease-in-out ${
+                  activeComponent === "statistic"
+                    ? "scale-100 opacity-100"
+                    : "scale-95 opacity-0"
+                }`}
+              >
+                <Statistics />
+              </div>
+            </div>
+
+            {/* WorkPost Section */}
             <div
               className={`fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-100 transition-opacity duration-500 ease-in-out ${
-                isPopupVisible ? "opacity-100" : "opacity-0 pointer-events-none"
+                activeComponent === "workPost"
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
               }`}
             >
               <div
                 className={`relative w-[50rem] h-128 transform transition-transform duration-500 ease-in-out ${
-                  isPopupVisible
+                  activeComponent === "workPost"
                     ? "scale-100 opacity-100"
                     : "scale-95 opacity-0"
                 }`}
               >
                 <WorkPost />
-                <button
-                  onClick={handleJobPostClick}
-                  className="absolute top-2 right-2 w-[6rem] h-[3rem] bg-red-500 text-white rounded-[0.5rem] hover:bg-red-600 transition ease-in-out duration-150"
-                >
-                  Close
-                </button>
               </div>
             </div>
+
             <footer className="fixed bottom-5 left-0 right-0 z-0">
               <div
                 id="bottom-menu"
-                className="flex items-center justify-center bg-opacity-80 backdrop-blur-md rounded-full px-6 py-3 shadow-lg max-w-14 mx-auto transition-all duration-300 hover:shadow-xl hover:bg-opacity-90"
+                className="flex items-center justify-center shadow-lg max-w-14 mx-auto transition-all duration-300 hover:shadow-xl hover:bg-opacity-90"
               >
-                <Button onJobPostClick={handleJobPostClick} />
+                <div>
+                  <Button
+                    onJobPostClick={handleJobPostClick}
+                    onStatisticClick={handleStatisticClick}
+                  />
+                </div>
               </div>
             </footer>
           </main>

@@ -6,7 +6,7 @@ from flask_jwt_extended import get_jwt, jwt_required, get_jwt_identity
 job_api = Blueprint('job_api', __name__)
 
 
-@job_api.route('/job', methods=['POST'])
+@job_api.route('/jobs', methods=['POST'])
 @jwt_required()
 def create_job():
     if not request.json:
