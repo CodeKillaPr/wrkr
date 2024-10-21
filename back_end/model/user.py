@@ -3,35 +3,36 @@ import base64
 from database.firebase_config import firedb
 from database.db import db
 from flask_bcrypt import Bcrypt
-from sqlalchemy import Column, String, Boolean, LargeBinary, Integer
 from sqlalchemy.orm import relationship
 import uuid
+from model.base import Base
 
 bcrypt = Bcrypt()
 
 
-class User(db.Model):
+class User(Base):
     __tablename__ = 'user'
-    id = Column(String, primary_key=True, default=lambda: str(
+    id = db.Column(db.String, primary_key=True, default=lambda: str(
         uuid.uuid4()))  # Generar UUID
-    email = Column(String, unique=True, nullable=False)
-    password_hash = Column(String, nullable=False)
-    is_admin = Column(Boolean, default=False)
-    card_id = Column(String, nullable=True)
-    first_name = Column(String, nullable=True)
-    last_name = Column(String, nullable=True)
-    resume = Column(LargeBinary, nullable=True)
-    contact = Column(String, nullable=True)
-    picture = Column(LargeBinary, nullable=True)
-    certification = Column(LargeBinary, nullable=True)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password_hash = db.Column(db.String, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+    card_id = db.Column(db.String, nullable=True)
+    first_name = db.Column(db.String, nullable=True)
+    last_name = db.Column(db.String, nullable=True)
+    resume = db.Column(db.LargeBinary, nullable=True)
+    contact = db.Column(db.String, nullable=True)
+    picture = db.Column(db.LargeBinary, nullable=True)
+    certification = db.Column(db.LargeBinary, nullable=True)
 
     # Definir la relación con Job
     jobs = relationship('Job', back_populates='user')
     # Definir la relación con Booking
     bookings = relationship('Booking', back_populates='user')
+    # Definir la relación con Resume
+    resumes = relationship('Resume', back_populates='user')
 
     def __init__(self, id, email, password=None, password_hash=None, is_admin=False, card_id=None, resume=None, contact=None, picture=None, certification=None, first_name="", last_name=""):
-
         self.id = id
         self.email = email
         self.is_admin = is_admin

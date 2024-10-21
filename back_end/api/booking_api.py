@@ -4,19 +4,22 @@ from model.booking import Booking
 from model.job import Job
 from database.db import db
 from flask_bcrypt import Bcrypt
+from database.firebase_config import firedb
+from flask_jwt_extended import get_jwt, jwt_required, get_jwt_identity
+import os
 
 booking_api = Blueprint('booking_api', __name__)
 bcrypt = Bcrypt()
 
 
 @booking_api.route('/booking', methods=['POST'])
+@jwt_required()
 def create_booking():
+    # if not request.json or 'user_id' not in request.json or 'job_id' not in request.json:
+    #     abort(400, description="Missing required fields")
 
-    if not request.json or 'user_id' not in request.json or 'job_id' not in request.json:
-        abort(400, description="Missing required fields")
-
-    user_id = request.json['user_id']
-    job_id = request.json['job_id']
+    user_id = get_jwt_identity()
+    job_id = request.json.get('job_id')
 
     if not User.query.get(user_id):
         abort(404, description="User not found")
@@ -24,21 +27,31 @@ def create_booking():
     if not Job.query.get(job_id):
         abort(404, description="Job not found")
 
+    offer_price = request.json.get('offer_price', 0)
+    final_price = request.json.get('final_price')
+
     booking = Booking(
         job_id=job_id,
         user_id=user_id,
-        status=request.json.get('status'),
-        offer_price=request.json.get('offer_price'),
-        final_price=request.json.get('final_price')
+        status=False,
+        offer_price=offer_price,
+        final_price=final_price
     )
-    db.session.add(booking)
-    db.session.commit()
+    booking.save()
+
+    if firedb:
+        booking_data = {
+            "id": booking.id,
+            "job_id": booking.job_id,
+            "user_id": booking.user_id,
+            "status": booking.status,
+            "offer_price": booking.offer_price,
+            "final_price": booking.final_price
+        }
+
+        firedb.collection('bookings').document(
+            str(booking.id)).set(booking_data)
+
     print(booking.job)
     print(booking.job.description)
     return jsonify({"msg": "Booking created successfully"}), 201
-
-
-@booking_api.route('/booking', methods=['GET'])
-def get_all_bookings():
-    bookings = Booking.query.all()
-    return jsonify([booking.to_dict() for booking in bookings]), 200
