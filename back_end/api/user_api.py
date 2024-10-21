@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, abort, request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from model.user import User
+from model.resume import Resume
 from database.db import db
 from flask_bcrypt import Bcrypt
 import base64
@@ -99,15 +100,15 @@ def login():
     return jsonify(access_token=access_token, is_admin=user.is_admin), 200
 
 
-@ user_api.route('/protected', methods=['GET'])
-@ jwt_required()
+@user_api.route('/protected', methods=['GET'])
+@jwt_required()
 def protected():
     current_user_id = get_jwt_identity()
     return jsonify(logged_in_as=current_user_id), 200
 
 
-@ user_api.route('/user/update', methods=['PUT'])
-@ jwt_required()
+@user_api.route('/user/update', methods=['PUT'])
+@jwt_required()
 def update_user():
     user_id = get_jwt_identity()
     user = User.query.get(user_id)
@@ -139,3 +140,42 @@ def update_user():
     db.session.commit()
 
     return jsonify({"msg": "User updated successfully"}), 200
+
+
+@user_api.route('/resume', methods=['POST'])
+@jwt_required()
+def create_resume():
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+
+    if not user:
+        abort(404, description="User not found")
+
+    if not request.json or 'title' not in request.json or 'description' not in request.json:
+        abort(400, description="Missing required fields")
+
+    resume = Resume(
+        user_id=user_id,
+        title=request.json['title'],
+        description=request.json['description'],
+        job_titles=request.json.get('job_titles', ''),
+        skills=request.json.get('skills', ''),
+        education=request.json.get('education', '')
+    )
+    resume.save()
+
+    if firedb:
+        resume_data = {
+            "user_id": resume.user_id,
+            "title": resume.title,
+            "description": resume.description,
+            "job_titles": resume.job_titles,
+            "skills": resume.skills,
+            "education": resume.education,
+            "created_at": resume.created_at,
+            "updated_at": resume.updated_at
+        }
+
+        firedb.collection('resumes').document(str(resume.id)).set(resume_data)
+
+    return jsonify({"msg": "Resume created successfully", "resume": resume.to_dict()}), 201
