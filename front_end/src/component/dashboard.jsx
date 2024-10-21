@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Graph from "./graph1";
 import Job from "./graph2";
+import RevenueCard from "./revenue_card";
 
 function Statistics() {
   const [empleosPublicados, setEmpleosPublicados] = useState(0);
@@ -74,6 +75,15 @@ function Statistics() {
                 {empleosPublicados !== null && (
                   <Job jobCount={empleosPublicados} />
                 )}
+              </div>
+            </div>
+
+            {/* Revenue Card */}
+            <div className="group bg-gray-500 shadow-md hover:scale-105 duration-300 rounded-lg p-6 relative flex flex-col items-center">
+              <h2 className="text-2xl font-bold mb-2">Revenue</h2>
+              <p className="text-4xl font-semibold">$1,200</p>
+              <div className="max-h-0 w-[64rem] opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:opacity-100 group-hover:max-h-[32rem]">
+                <RevenueCard />
               </div>
             </div>
           </div>

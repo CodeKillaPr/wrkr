@@ -1,11 +1,11 @@
 import PropTypes from "prop-types";
 
-function Button({ onJobPostClick }) {
+function Button({ onJobPostClick, onStatisticClick }) {
   return (
-    <div className="relative flex justify-center bottom-5 items-center">
+    <div className="relative flex bottom-5  left-36 lg:left-[50rem]  items-end">
       <input className="peer hidden" type="checkbox" id="toggle" />
       <label
-        className="absolute z-10 flex size-[3.5rem] cursor-pointer items-center justify-center rounded-full border bg-blue-500 duration-500 peer-checked:rotate-45 peer-checked:bg-blue-500"
+        className="absolute z-10 flex size-[3.5rem] gap-5 cursor-pointer items-center justify-center rounded-full border bg-blue-500 duration-500 rotate-45 peer-checked:bg-blue-500"
         htmlFor="toggle"
       >
         <svg
@@ -26,7 +26,7 @@ function Button({ onJobPostClick }) {
 
       <div
         id="job-post"
-        className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-red-500 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:-translate-x-16 peer-checked:-translate-y-16 peer-checked:delay-[0ms]"
+        className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-red-500 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:-translate-x-[0rem] peer-checked:-translate-y-[16rem] peer-checked:delay-[25ms]"
         onClick={onJobPostClick}
       >
         <svg
@@ -45,7 +45,11 @@ function Button({ onJobPostClick }) {
         </svg>
       </div>
 
-      <div className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-yellow-500 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:-translate-x-16 peer-checked:delay-[75ms]">
+      <div
+        id="statistic-post"
+        className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-yellow-500 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:-translate-x-[0rem] peer-checked:-translate-y-[20rem] peer-checked:delay-[0ms]"
+        onClick={onStatisticClick}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -62,7 +66,7 @@ function Button({ onJobPostClick }) {
         </svg>
       </div>
 
-      <div className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-pink-500 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:-translate-y-16 peer-checked:delay-[75ms]">
+      <div className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-pink-500 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:-translate-y-[8rem] peer-checked:delay-[75ms]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -79,7 +83,7 @@ function Button({ onJobPostClick }) {
         </svg>
       </div>
 
-      <div className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-green-700 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:-translate-y-16 peer-checked:translate-x-16 peer-checked:delay-[100ms]">
+      <div className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-green-700 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:-translate-y-[12rem] peer-checked:translate-x-[0rem] peer-checked:delay-[0ms]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -96,7 +100,7 @@ function Button({ onJobPostClick }) {
         </svg>
       </div>
 
-      <div className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-purple-500 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:translate-x-16 peer-checked:delay-[100ms]">
+      <div className="absolute flex size-14 cursor-pointer items-center justify-center rounded-full border bg-purple-500 duration-500 hover:scale-110 hover:bg-[#0000] peer-checked:translate-x-[0rem] peer-checked:-translate-y-[4rem] peer-checked:delay-[100ms]">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -117,5 +121,7 @@ function Button({ onJobPostClick }) {
 }
 Button.propTypes = {
   onJobPostClick: PropTypes.func.isRequired,
+  onStatisticClick: PropTypes.func.isRequired,
 };
+
 export default Button;
