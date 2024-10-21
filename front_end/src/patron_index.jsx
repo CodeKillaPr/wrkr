@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Statistics from "./component/dashboard";
 import "./App.css";
-import Button from "./component/patron_button";
+import AllButton from "./component/patron_button2";
 import WorkPost from "./component/work_post";
+import Employs from "./component/wrkrs_card";
 
 function Patron() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -20,12 +21,24 @@ function Patron() {
     }
   };
 
+  const handleBookingClick = () => {
+    if (activeComponent === "booking") {
+      setActiveComponent(null); // Cierra el componente si ya está abierto
+    } else {
+      setActiveComponent("booking"); // Abre WorkPost
+    }
+  };
+
   const handleStatisticClick = () => {
     if (activeComponent === "statistic") {
       setActiveComponent(null); // Cierra el componente si ya está abierto
     } else {
       setActiveComponent("statistic"); // Abre Statistics
     }
+  };
+
+  const handleBackClick = () => {
+    setActiveComponent(null); // Reinicia el estado para mostrar AllButton
   };
 
   useEffect(() => {
@@ -42,7 +55,7 @@ function Patron() {
     <>
       <header className="fixed top-0 left-0 w-full dark:bg-gray-800 text-white shadow-sm z-30">
         <div>
-          <h1 className="text-2xl text-center font-bold p-9">Dashboard</h1>
+          <h1 className="text-2xl text-center font-bold p-9">Welcome</h1>
         </div>
         <label
           htmlFor="menu-toggle"
@@ -64,12 +77,12 @@ function Patron() {
         </label>
         <aside
           id="side-menu"
-          className={`fixed text-white top-0 left-0 w-80 sm:w-96 h-full bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 z-20 ${
+          className={`fixed text-white top-0 left-0 w-[21rem] sm:w-80 md:w-96 h-full bg-white dark:bg-gray-800 shadow-lg transform transition-transform duration-300 z-20 ${
             menuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
           <img
-            className="mt-16 ml-28 w-36 h-36 hover:scale-110 duration-300 rounded-full border-2 border-solid border-gray-400"
+            className="mt-16 ml-28 xs:w-24 xs:h-24 sm:w-28 sm:h-28 md:w-36 md:h-36 lg:w-40 lg:h-40 hover:scale-110 duration-300 rounded-full border-2 border-solid border-gray-400"
             src="https://img.freepik.com/psd-gratis/ilustracion-3d-avatar-o-perfil-humano_23-2150671122.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1728259200&semt=ais_hybrid"
             alt="Bordered avatar"
           />
@@ -118,20 +131,26 @@ function Patron() {
           >
             {/* Statistic Section */}
             <div
-              className={`ftransition-all text-white scrollbar-hide overflow-y-scroll pt-0 h-[calc(100vh-1rem)] w-full bg-opacity-100 duration-500 ease-in-out ${
+              className={`transition-all text-white scrollbar-hide overflow-y-scroll pt-0 h-[calc(100vh-1rem)] w-full bg-opacity-100 duration-500 ease-in-out ${
                 activeComponent === "statistic"
                   ? "opacity-100"
                   : "opacity-0 pointer-events-none"
               }`}
             >
               <div
-                className={`relative  transform transition-transform duration-500 ease-in-out ${
+                className={`relative transform transition-transform duration-500 ease-in-out ${
                   activeComponent === "statistic"
                     ? "scale-100 opacity-100"
                     : "scale-95 opacity-0"
                 }`}
               >
-                <Statistics />
+                <Statistics onBackClick={handleBackClick} />
+                <button
+                  onClick={handleBackClick}
+                  className="fixed top-[2.5rem] bg-gradient-to-t from-indigo-700 to-blue-500 left-[1rem] z-50 rounded-md p-4 m-2 text-white hover:scale-110 duration-300 shadow-black"
+                >
+                  Back
+                </button>
               </div>
             </div>
 
@@ -144,29 +163,66 @@ function Patron() {
               }`}
             >
               <div
-                className={`relative w-[50rem] h-128 transform transition-transform duration-500 ease-in-out ${
+                className={`relative w-[50rem] h-128 top-5 transform transition-transform duration-500 ease-in-out ${
                   activeComponent === "workPost"
                     ? "scale-100 opacity-100"
                     : "scale-95 opacity-0"
                 }`}
               >
-                <WorkPost />
+                <WorkPost onBackClick={handleBackClick} />
               </div>
             </div>
 
-            <footer className="fixed bottom-5 left-0 right-0 z-0">
+            {/* Employs Section */}
+            <div
+              className={`absolute top-[30rem] left-1/2 transform transition-all duration-500 -translate-x-1/2 -translate-y-1/2 border border-blue-400/30 bg-blue-500/20  hover:bg-sky-700/40 p-0 rounded-lg shadow-lg w-[23rem] max-h-full overflow-y-scroll scrollbar-hide ${
+                activeComponent === "booking"
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+            >
               <div
-                id="bottom-menu"
-                className="flex items-center justify-center shadow-lg max-w-14 mx-auto transition-all duration-300 hover:shadow-xl hover:bg-opacity-90"
+                className={`${
+                  activeComponent === "booking"
+                    ? "scale-100 opacity-100"
+                    : "scale-95 opacity-0"
+                }`}
               >
+                <header className="sticky top-[-0rem] z-10 w-full bg-white dark:bg-gray-800">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 p-5 mb-0">
+                    Lista de Empleados
+                  </h2>
+                  <button
+                    onClick={handleBackClick}
+                    className="absolute top-4 right-4 border border-blue-400/30 bg-blue-500/20  hover:bg-blue-500/30 text-white px-3 py-1 rounded-md"
+                  >
+                    Back
+                  </button>
+                </header>
+                <ul className="flex space-y-4 p-4 hover:scale-105 duration-300">
+                  <Employs />
+                </ul>
+              </div>
+            </div>
+
+            {/* AllButton Section */}
+            <div
+              className={`fixed top-[5rem] left-0 right-0 z-0 transition-opacity duration-500 ease-in-out ${
+                !activeComponent
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+            >
+              <footer id="bottom-menu">
                 <div>
-                  <Button
+                  <AllButton
                     onJobPostClick={handleJobPostClick}
                     onStatisticClick={handleStatisticClick}
+                    onBookingClick={handleBookingClick}
                   />
                 </div>
-              </div>
-            </footer>
+              </footer>
+            </div>
           </main>
         </div>
       </div>

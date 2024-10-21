@@ -1,9 +1,37 @@
 import { useState, useEffect } from "react";
 import maplibregl from "maplibre-gl"; // Importar maplibregl
 import "./App.css";
+import axios from "axios";
+import BookinCard from "./component/booking_card";
 
 function Worker() {
   const [showJobList, setShowJobList] = useState(false); // Estado para controlar la visibilidad de la lista de empleos
+  const [jobs, setJobs] = useState([]); // Estado para almacenar la lista de trabajos
+  const [selectedJob, setSelectedJob] = useState(null); // Estado para almacenar el trabajo seleccionado
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get("/api/jobs");
+        console.log("Jobs fetched:", response.data.jobs); // Mensaje de depuración
+        setJobs(response.data.jobs);
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  const handleViewJob = (job) => {
+    setSelectedJob(job); // Actualiza el trabajo seleccionado para mostrar BookingCard
+    setShowJobList(false); // Oculta el job-card
+  };
+
+  const handleCloseBookingCard = () => {
+    setSelectedJob(null); // Cierra el BookingCard
+    setShowJobList(true); // Muestra el job-card
+  };
 
   useEffect(() => {
     const menuToggle = document.getElementById("menu-toggle");
@@ -108,58 +136,65 @@ function Worker() {
               <div className="ml-6 w-[100%] h-[2px] bg-white rounded-md transition-all duration-300 origin-left -translate-y-[0.8rem] peer-checked:rotate-[45deg]" />
             </div>
           </label>
-
           <main id="main-content" className="relative z-0">
             <div id="map" className="w-screen h-screen"></div>
             <button
               id="find-me"
-              className="absolute bottom-64 right-4 hover:scale-110 bg-blue-500 bg-opacity-50 transition-all duration-500 hover:bg-blue-500 dark:hover:bg-blue-500 py-2 px-4 rounded-lg shadow-lg"
+              className="absolute bottom-64 right-4 hover:scale-110 border border-blue-400/30 bg-blue-500/20  hover:bg-blue-500/50 bg-opacity-50 transition-all duration-500  py-2 px-4 rounded-lg shadow-lg"
             >
               Find Me
             </button>
             {showJobList && (
               <div
                 id="job-card"
-                className="absolute top-1/2 left-1/2 transform hover:scale-110 duration-500 -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96"
+                className={`absolute top-[25rem] left-1/2 transform transition-opacity duration-500 ${
+                  selectedJob ? "opacity-0" : "opacity-100"
+                } -translate-x-1/2 -translate-y-1/2 border border-gray-500/30 bg-gray-800/90 p-0 rounded-lg shadow-lg w-[28rem] max-h-[31rem] overflow-y-scroll scrollbar-hide`}
               >
-                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-                  Lista de Empleos
-                </h2>
-                <ul className="space-y-4">
-                  <li className="bg-gray-100 hover:scale-110 duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md">
-                    <h3 className="font-semibold text-gray-800 dark:text-gray-200">
-                      Mamadora
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      Frenshie · Tiempo Completo
-                    </p>
-                    <button className="mt-2 bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
-                      Aplicar
-                    </button>
-                  </li>
-                  <li className="bg-gray-100 hover:scale-110 duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md">
-                    <h3 className="font-semibold text-gray-800 dark:text-gray-200">
-                      Empeñador de culo
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      calle 14 · Tiempo Completo
-                    </p>
-                    <button className="mt-2 bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
-                      Aplicar
-                    </button>
-                  </li>
-                  <li className="bg-gray-100 hover:scale-110 duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md">
-                    <h3 className="font-semibold text-gray-800 dark:text-gray-200">
-                      Runner
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      Lloren torres · Tiempo Completo
-                    </p>
-                    <button className="mt-2 bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">
-                      Aplicar
-                    </button>
-                  </li>
+                <header className="sticky top-[-0rem] z-10 w-full bg-white dark:bg-gray-800">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 p-5 mb-0">
+                    Lista de Empleos
+                  </h2>
+                </header>
+                <ul className="space-y-4 p-5">
+                  {jobs.map((job) => (
+                    <li
+                      key={job.id}
+                      className="bg-gray-100 hover:scale-105 duration-100 dark:bg-gray-700 p-4 rounded-md shadow-md"
+                    >
+                      <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+                        {job.title}
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {job.location} · {job.time_frame}
+                      </p>
+                      <button
+                        className="mt-2 border border-blue-400/30 bg-blue-500/20 text-white py-1 px-3 rounded  hover:bg-blue-500/40 hover:scale-105 duration-200"
+                        onClick={() => handleViewJob(job)} // Manejador del botón "Ver"
+                      >
+                        Ver
+                      </button>
+                    </li>
+                  ))}
                 </ul>
+              </div>
+            )}
+
+            {selectedJob && (
+              <div
+                className={`fixed inset-0 bg-black bg-opacity-50 flex transition-all items-center justify-center z-50 duration-500 ${
+                  selectedJob ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <div className="gap-4 p-5 rounded-lg bg-gray-800/95 shadow-lg transition-all duration-500 hover:scale-110">
+                  <BookinCard job={selectedJob} />
+                  <button
+                    className="mt-4 bg-red-500/20 border border-red-500/55 hover:bg-red-500/50 text-white py-2 px-4 rounded duration-300"
+                    onClick={handleCloseBookingCard} // Cerrar el popup
+                  >
+                    Cerrar
+                  </button>
+                </div>
               </div>
             )}
           </main>
@@ -215,12 +250,12 @@ function Worker() {
         >
           <div
             id="bottom-menu"
-            className="flex items-center justify-between bg-blue-500 bg-opacity-80 backdrop-blur-md rounded-full px-6 py-3 shadow-lg max-w-md mx-auto transition-all duration-300 hover:shadow-xl hover:bg-opacity-90"
+            className="flex items-center justify-between border border-blue-400/30 bg-blue-500/20  hover:bg-blue-500/40  bg-opacity-80 backdrop-blur-md rounded-full px-6 py-3 shadow-lg max-w-md mx-auto transition-all duration-300 hover:shadow-xl hover:bg-opacity-90"
           >
             <button
               id="show-table"
               onClick={() => setShowJobList(!showJobList)}
-              className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800"
+              className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1"
             >
               <svg
                 className="w-[24px] h-[24px] text-gray-800 dark:text-white"
@@ -238,7 +273,7 @@ function Worker() {
                 />
               </svg>
             </button>
-            <button className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800">
+            <button className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1">
               <svg
                 className="w-[24px] h-[24px] text-gray-800 dark:text-white"
                 aria-hidden="true"
@@ -255,7 +290,7 @@ function Worker() {
                 />
               </svg>
             </button>
-            <button className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-800">
+            <button className="text-gray-600 hover:text-gray-800 mx-2 transition-all duration-200 ease-in-out hover:bg-blue-650 hover:shadow-md rounded-full p-1">
               <svg
                 className="w-[24px] h-[24px] text-gray-800 dark:text-white"
                 aria-hidden="true"

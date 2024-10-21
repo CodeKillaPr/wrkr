@@ -1,64 +1,44 @@
 import { useState } from "react";
-import Pattern from "./component/background";
+// import Pattern from "./component/background";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { loginUser, registerUser } from "./assets/api";
 
 function Form() {
-  // Estado para los datos de login
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-
-  // Estado para los datos de registro
   const [registerData, setRegisterData] = useState({
     first_name: "",
+    last_name: "",
     email: "",
     password: "",
-    is_admin: false, // Inicialmente falso
+    is_admin: false,
   });
 
   const navigate = useNavigate();
 
-  // Función para manejar los cambios en el formulario de login
   const handleLoginChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
-  // Función para manejar los cambios en el formulario de registro
   const handleRegisterChange = (e) => {
     const { name, value } = e.target;
-
-    // Si el campo es "is_admin", manejar el input y convertirlo a booleano
     if (name === "is_admin") {
-      // Guardar lo que el usuario escribe
       setRegisterData({
         ...registerData,
-        is_admin_input: value, // Guardar lo que el usuario está escribiendo
-        is_admin: value.toLowerCase() === "yes", // Convertir a booleano cuando sea "yes"
+        is_admin_input: value,
+        is_admin: value.toLowerCase() === "yes",
       });
     } else {
       setRegisterData({ ...registerData, [name]: value });
     }
   };
 
-  // Función para enviar el formulario de login
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
-      });
-      if (!response.ok) {
-        throw new Error("Error en el inicio de sesión");
-      }
-      const data = await response.json();
+      const data = await loginUser(loginData);
       console.log("Inicio de sesión exitoso:", data);
       localStorage.setItem("token", data.access_token);
-
-      // Redirigir basado en el valor booleano
       if (data.is_admin) {
         navigate("/patron");
       } else {
@@ -69,21 +49,10 @@ function Form() {
     }
   };
 
-  // Función para enviar el formulario de registro
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(registerData),
-      });
-      if (!response.ok) {
-        throw new Error("Error en el registro");
-      }
-      const data = await response.json();
+      const data = await registerUser(registerData);
       console.log("Registro exitoso:", data);
     } catch (error) {
       console.error(error);
@@ -92,10 +61,10 @@ function Form() {
 
   return (
     <StyledWrapper>
-      <PatternWrapper>
+      {/* <PatternWrapper>
         <Pattern />
-      </PatternWrapper>
-      <div className="wrapper">
+      </PatternWrapper> */}
+      <div className="wrapper bg-gradient-to-tl from-gray-500 via-gray-600 to-gray-700">
         <div className="card-switch">
           <label className="switch">
             <input className="toggle" type="checkbox" />
@@ -144,6 +113,14 @@ function Form() {
                     className="flip-card__input hover:scale-105 duration-300 bg-gray-600"
                     value={registerData.first_name}
                     onChange={handleRegisterChange}
+                  />{" "}
+                  <input
+                    type="name"
+                    placeholder="Last Name(Optional)"
+                    name="last_name"
+                    className="flip-card__input hover:scale-105 duration-300 bg-gray-600"
+                    value={registerData.last_name}
+                    onChange={handleRegisterChange}
                   />
                   <input
                     type="email"
@@ -164,14 +141,14 @@ function Form() {
                   <input
                     type="text"
                     name="is_admin"
-                    placeholder="Admin (yes/no)"
+                    placeholder="Patron (yes/no)"
                     value={registerData.is_admin_input || ""}
                     onChange={handleRegisterChange}
                     className="flip-card__input hover:scale-105 duration-300 bg-gray-600"
                   />
                   <button
                     className="flip-card__btn hover:scale-95 hover:bg-blue-500 focus:bg-blue-500 duration-200 dark:bg-gray-700"
-                    onClick={() => document.querySelector(".toggle").click()} // Este código simula un clic en el toggle
+                    onClick={() => document.querySelector(".toggle").click()}
                   >
                     Confirm!
                   </button>
@@ -402,13 +379,13 @@ const StyledWrapper = styled.div`
   }
 `;
 
-const PatternWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-`;
+// const PatternWrapper = styled.div`
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   width: 100%;
+//   height: 100%;
+//   z-index: 0;
+// `;
 
 export default Form;
