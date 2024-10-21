@@ -1,10 +1,16 @@
 import PropTypes from "prop-types";
+// import axios from "axios";
+// import { useEffect, useState } from "react";
 
-function AllButton({ onJobPostClick, onStatisticClick }) {
+function AllButton({ onJobPostClick, onStatisticClick, onBookingClick }) {
+  const hasBooking = false;
+  //   const [booking, setBooking] = useState([]);
+
+  //   useEffect(() => {}, []);
   return (
     <div className="relative top-52 flex h-full w-full items-center justify-center">
       <div className="profileCard_container relative border-spacing-4 rounded-full border-2 border-dashed p-10 duration-300 hover:border-blue-400">
-        <button className="profile_item absolute -top-[4px] left-[45px] cursor-pointer  rounded-full border border-teal-400/50  bg-cover p-[2px] transition-all duration-500 hover:scale-95 active:scale-95">
+        <button className="profile_item absolute -top-[4px] left-[45px] cursor-pointer  rounded-full border border-teal-400/50  bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[0.5rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95">
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-teal-400 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +29,7 @@ function AllButton({ onJobPostClick, onStatisticClick }) {
           </span>
         </button>
 
-        <button className="profile_item absolute -top-[4px] right-[45px] cursor-pointer rounded-full border border-gray-400/50 bg-cover p-[2px] transition-all duration-500 hover:scale-95 active:scale-95">
+        <button className="profile_item absolute -top-[4px] right-[45px] cursor-pointer rounded-full border border-gray-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[-1rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95">
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-gray-500 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +55,7 @@ function AllButton({ onJobPostClick, onStatisticClick }) {
 
         <button
           onClick={onStatisticClick}
-          className="profile_item absolute -left-4 top-20 cursor-pointer rounded-full border border-red-400/50 bg-cover p-[2px] transition-all duration-500 hover:scale-95 active:scale-95"
+          className="profile_item absolute -left-4 top-20 cursor-pointer rounded-full border border-red-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[1rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95"
         >
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-red-500 p-2 transition-all duration-500">
             <svg
@@ -69,7 +75,7 @@ function AllButton({ onJobPostClick, onStatisticClick }) {
           </span>
         </button>
 
-        <button className="profile_item absolute -right-4 top-20 cursor-pointer rounded-full border border-blue-400/50 bg-cover p-[2px] transition-all duration-500 hover:scale-95 active:scale-95">
+        <button className="profile_item absolute -right-4 top-20 cursor-pointer rounded-full border border-blue-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[-1rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95">
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-blue-400 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +94,12 @@ function AllButton({ onJobPostClick, onStatisticClick }) {
           </span>
         </button>
 
-        <button className="profile_item absolute -left-0 bottom-8 cursor-pointer rounded-full border border-orange-400/50 bg-cover p-[2px] transition-all duration-500 hover:scale-95 active:scale-95">
+        <button
+          onClick={onBookingClick}
+          className={`profile_item absolute -left-0 bottom-8 cursor-pointer rounded-full border border-orange-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[0.5rem] hover:-translate-y-[-0.5rem] hover:scale-125 active:scale-95 ${
+            hasBooking ? "animate-bounce" : ""
+          }`}
+        >
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-orange-400 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +140,7 @@ function AllButton({ onJobPostClick, onStatisticClick }) {
           </span>
         </button>
 
-        <button className="profile_item absolute -bottom-4 right-[40%] cursor-pointer rounded-full border border-green-400/50 bg-cover p-[2px] transition-all duration-100 hover:scale-125 hover:-translate-y-[-0.8rem] active:scale-95">
+        <button className="profile_item absolute -bottom-4 right-[40%] cursor-pointer rounded-full border border-green-400/50 bg-cover p-[2px] transition-all duration-100 hover:scale-125 hover:-translate-y-[-1rem] active:scale-95">
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-green-500 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -164,6 +175,7 @@ function AllButton({ onJobPostClick, onStatisticClick }) {
 AllButton.propTypes = {
   onJobPostClick: PropTypes.func.isRequired,
   onStatisticClick: PropTypes.func.isRequired,
+  onBookingClick: PropTypes.func.isRequired,
 };
 
 export default AllButton;

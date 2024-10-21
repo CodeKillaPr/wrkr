@@ -1,15 +1,17 @@
 import { useState } from "react";
 import myImage from "../assets/img/avatar.png";
 import { jwtDecode } from "jwt-decode"; // Importa jwt-decode
+import PropTypes from "prop-types";
+import { createJob } from "../assets/api"; // Importa createJob
 
-function WorkPost() {
+function WorkPost({ onBackClick }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [pay, setPay] = useState("");
   const [location, setLocation] = useState("");
   const [time_frame, setTimeFrame] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const token = localStorage.getItem("token");
@@ -45,43 +47,29 @@ function WorkPost() {
       time_frame,
     };
 
-    fetch("/api/jobs", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(jobData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("Job posted successfully!", data);
-        // Limpiar campos del formulario
-        setTitle("");
-        setDescription("");
-        setPay("");
-        setLocation("");
-        setTimeFrame("");
-      })
-      .catch((error) => {
-        console.error("Error posting job:", error);
-        // Imprimir respuesta del servidor para más detalles
-        if (error.response && error.response.data) {
-          console.error("Server Response:", error.response.data);
-        } else {
-          console.error("Error Details:", error);
-        }
-      });
+    try {
+      const data = await createJob(jobData, token);
+      console.log("Job posted successfully!", data);
+      // Limpiar campos del formulario
+      setTitle("");
+      setDescription("");
+      setPay("");
+      setLocation("");
+      setTimeFrame("");
+    } catch (error) {
+      console.error("Error posting job:", error);
+      // Imprimir respuesta del servidor para más detalles
+      if (error.response && error.response.data) {
+        console.error("Server Response:", error.response.data);
+      } else {
+        console.error("Error Details:", error);
+      }
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen overflow-hidden dark hover:scale-110 duration-300">
-      <div className="relative w-full max-w-md bg-gray-700 rounded-lg shadow-md p-6">
+    <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
+      <div className="relative xs:w-[20rem] lg:w-full max-w-md bg-gray-700 rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-bold text-gray-200 mb-4">
           Jobs Post Form
         </h2>
@@ -91,14 +79,14 @@ function WorkPost() {
             placeholder="Job title"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150 hover:scale-105"
             type="text"
             required
           />
 
           <textarea
             placeholder="Description"
-            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150 hover:scale-105"
             rows="4"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -107,7 +95,7 @@ function WorkPost() {
 
           <input
             placeholder="Pay rate"
-            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150 no-spinner"
+            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150 no-spinner hover:scale-105"
             type="number"
             step="0.01"
             value={pay}
@@ -117,7 +105,7 @@ function WorkPost() {
 
           <input
             placeholder="Location"
-            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150 hover:scale-105"
             type="text"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
@@ -126,7 +114,7 @@ function WorkPost() {
 
           <input
             placeholder="Time frame"
-            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            className="bg-gray-600 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150 hover:scale-105"
             type="text"
             value={time_frame}
             onChange={(e) => setTimeFrame(e.target.value)}
@@ -135,22 +123,32 @@ function WorkPost() {
 
           <div className="flex items-center justify-between mt-4">
             <button
-              className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150"
+              className="mb-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150 hover:scale-105"
               type="submit"
             >
               Submit
             </button>
           </div>
+
+          <button
+            type="button"
+            onClick={onBackClick}
+            className="mb-4 bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-bold py-[0.5rem] px-[1rem] w-[5.5rem] rounded-md hover:bg-indigo-600 hover:to-blue-600 transition ease-in-out duration-150 hover:scale-105"
+          >
+            Back
+          </button>
         </form>
 
         <img
           src={myImage}
           alt="3D Man Holding Laptop"
-          className="absolute top-[10rem] right-[-13rem] w-96 h-auto mt-4 rounded-lg"
+          className="absolute xs:top-[15.8rem] xs:right-[-9rem] lg:top-[10rem] lg:right-[-13rem] w-96 h-auto mt-4 rounded-lg"
         />
       </div>
     </div>
   );
 }
-
+WorkPost.propTypes = {
+  onBackClick: PropTypes.func.isRequired,
+};
 export default WorkPost;
