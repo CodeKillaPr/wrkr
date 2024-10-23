@@ -3,6 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "./assets/api";
+import MyNameIs from "./component/mynameis_card";
 
 function Form() {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
@@ -58,19 +59,21 @@ function Form() {
       console.error(error);
     }
   };
-
   return (
     <StyledWrapper>
       {/* <PatternWrapper>
         <Pattern />
       </PatternWrapper> */}
       <div className="wrapper bg-gradient-to-tl from-gray-500 via-gray-600 to-gray-700">
+        <div className="absolute xs:left-[0rem] xs:h-[15rem] xs:top-[1rem] sm:top-[15rem] sm:left-[18rem] lg:left-[35rem] lg:top-[23rem] opacity-[100%]">
+          <MyNameIs />
+        </div>
         <div className="card-switch">
           <label className="switch">
             <input className="toggle" type="checkbox" />
             <span className="slider" />
-            <span className="card-side" />
-            <div className="flip-card__inner">
+            <span className="card-side " />
+            <div className="flip-card__inner ">
               <div className="flip-card__front bg-gray-800">
                 <div className="title">Log in</div>
                 <form
@@ -113,7 +116,7 @@ function Form() {
                     className="flip-card__input hover:scale-105 duration-300 bg-gray-600"
                     value={registerData.first_name}
                     onChange={handleRegisterChange}
-                  />{" "}
+                  />
                   <input
                     type="name"
                     placeholder="Last Name(Optional)"
@@ -179,6 +182,7 @@ const StyledWrapper = styled.div`
     position: relative;
     z-index: 1;
   }
+
   /* switch card */
   .switch {
     transform: translateY(-200px);

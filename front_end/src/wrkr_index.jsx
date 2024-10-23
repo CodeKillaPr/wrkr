@@ -3,11 +3,24 @@ import maplibregl from "maplibre-gl"; // Importar maplibregl
 import "./App.css";
 import axios from "axios";
 import BookinCard from "./component/booking_card";
+import ResumeForm from "./component/resume_form";
 
 function Worker() {
   const [showJobList, setShowJobList] = useState(false); // Estado para controlar la visibilidad de la lista de empleos
   const [jobs, setJobs] = useState([]); // Estado para almacenar la lista de trabajos
   const [selectedJob, setSelectedJob] = useState(null); // Estado para almacenar el trabajo seleccionado
+  const token = localStorage.getItem("token");
+  const [showResumeForm, setShowResumeForm] = useState(false); // Estado para controlar la visibilidad del formulario de currículum
+
+  const handleAcceptJob = () => {
+    setShowResumeForm(true); // Muestra el formulario ResumeForm
+  };
+
+  const handleResumeSubmit = () => {
+    setShowResumeForm(false); // Oculta el formulario ResumeForm
+    setSelectedJob(null); // Oculta el BookingCard
+    setShowJobList(true); // Muestra la lista de trabajos
+  };
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -180,14 +193,14 @@ function Worker() {
               </div>
             )}
 
-            {selectedJob && (
+            {selectedJob && !showResumeForm && (
               <div
                 className={`fixed inset-0 bg-black bg-opacity-50 flex transition-all items-center justify-center z-50 duration-500 ${
                   selectedJob ? "opacity-100" : "opacity-0"
                 }`}
               >
                 <div className="gap-4 p-5 rounded-lg bg-gray-800/95 shadow-lg transition-all duration-500 hover:scale-110">
-                  <BookinCard job={selectedJob} />
+                  <BookinCard job={selectedJob} onAccept={handleAcceptJob} />
                   <button
                     className="mt-4 bg-red-500/20 border border-red-500/55 hover:bg-red-500/50 text-white py-2 px-4 rounded duration-300"
                     onClick={handleCloseBookingCard} // Cerrar el popup
@@ -195,6 +208,12 @@ function Worker() {
                     Cerrar
                   </button>
                 </div>
+              </div>
+            )}
+
+            {showResumeForm && (
+              <div className="fixed inset-0 w-full h-full items-center justify-center">
+                <ResumeForm token={token} onSubmit={handleResumeSubmit} />
               </div>
             )}
           </main>
