@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-function BookingCard({ job }) {
+function BookingCard({ job, onAccept }) {
   console.log(job);
   if (!job) {
     return <div>No job selected</div>;
@@ -115,7 +115,10 @@ function BookingCard({ job }) {
           </div>
 
           <div className="flex items-center justify-between space-x-2">
-            <button className="flex flex-1 items-center justify-center rounded-lg border border-green-400/20 bg-green-500/10 px-3 py-2 text-xs font-medium text-white/90 transition duration-300 ease-in-out hover:bg-green-500/20">
+            <button
+              onClick={() => onAccept(job.id)}
+              className="flex flex-1 items-center justify-center rounded-lg border border-green-400/20 bg-green-500/10 px-3 py-2 text-xs font-medium text-white/90 transition duration-300 ease-in-out hover:bg-green-500/20"
+            >
               Accept
             </button>
             <button className="flex flex-1 items-center justify-center rounded-lg bg-green-500/20 px-3 py-2 text-xs font-medium text-white transition duration-300 ease-in-out hover:bg-green-500/30">
@@ -130,5 +133,6 @@ function BookingCard({ job }) {
 
 BookingCard.propTypes = {
   job: PropTypes.object,
+  onAccept: PropTypes.func.isRequired,
 };
 export default BookingCard;
