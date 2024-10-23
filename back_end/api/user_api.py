@@ -7,6 +7,7 @@ from flask_bcrypt import Bcrypt
 import base64
 from database.firebase_config import firedb
 import uuid
+import os
 
 user_api = Blueprint('user_api', __name__)
 bcrypt = Bcrypt()
@@ -172,10 +173,22 @@ def create_resume():
             "job_titles": resume.job_titles,
             "skills": resume.skills,
             "education": resume.education,
-            "created_at": resume.created_at,
-            "updated_at": resume.updated_at
+
         }
 
         firedb.collection('resumes').document(str(resume.id)).set(resume_data)
 
     return jsonify({"msg": "Resume created successfully", "resume": resume.to_dict()}), 201
+
+
+@user_api.route('/resume', methods=['GET'])
+def get_resumes():
+    if os.environ.get('ENV') == 'production' and firedb:
+        resumes_ref = firedb.collection('resumes')
+        resumes_docs = resumes_ref.get()
+        resumes_data = [resume.to_dict() for resume in resumes_docs]
+    else:
+        resumes = Resume.query.all()
+        resumes_data = [resume.to_dict() for resume in resumes]
+
+        return jsonify({"resumes": resumes_data}), 200
