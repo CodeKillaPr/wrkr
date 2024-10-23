@@ -19,6 +19,7 @@ def create_booking():
     #     abort(400, description="Missing required fields")
 
     user_id = get_jwt_identity()
+    resume_id = get_jwt_identity()
     job_id = request.json.get('job_id')
 
     if not User.query.get(user_id):
@@ -31,6 +32,7 @@ def create_booking():
     final_price = request.json.get('final_price')
 
     booking = Booking(
+        resume_id=resume_id,
         job_id=job_id,
         user_id=user_id,
         status=False,
@@ -44,6 +46,7 @@ def create_booking():
             "id": booking.id,
             "job_id": booking.job_id,
             "user_id": booking.user_id,
+            "resume_id": booking.resume_id,
             "status": booking.status,
             "offer_price": booking.offer_price,
             "final_price": booking.final_price

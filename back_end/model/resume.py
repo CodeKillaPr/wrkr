@@ -1,5 +1,4 @@
 from database.db import db
-from datetime import datetime
 from model.base import Base
 from sqlalchemy.orm import relationship
 import os
@@ -15,7 +14,8 @@ class Resume(Base):
     skills = db.Column(db.Text)  # Habilidades
     education = db.Column(db.Text)  # Educación
 
-    user = relationship('User', back_populates='resumes')
+    user = db.relationship('User', back_populates='resumes')
+    bookings = db.relationship('Booking', back_populates='resume')
 
     def __init__(self, user_id, title, description, job_titles='', skills='', education='', **kwargs):
         super().__init__(**kwargs)

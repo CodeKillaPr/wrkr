@@ -26,11 +26,10 @@ class User(Base):
     certification = db.Column(db.LargeBinary, nullable=True)
 
     # Definir la relación con Job
-    jobs = relationship('Job', back_populates='user')
+    jobs = db.relationship('Job', back_populates='user')
     # Definir la relación con Booking
-    bookings = relationship('Booking', back_populates='user')
-    # Definir la relación con Resume
-    resumes = relationship('Resume', back_populates='user')
+    resumes = db.relationship('Resume', back_populates='user')
+    bookings = db.relationship('Booking', back_populates='user')
 
     def __init__(self, id, email, password=None, password_hash=None, is_admin=False, card_id=None, resume=None, contact=None, picture=None, certification=None, first_name="", last_name=""):
         self.id = id

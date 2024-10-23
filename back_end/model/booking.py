@@ -6,19 +6,23 @@ import os
 
 class Booking(Base):
     job_id = db.Column(db.String, db.ForeignKey('job.id'), nullable=False)
+    resume_id = db.Column(db.String, db.ForeignKey(
+        'resume.id'), nullable=False)
     user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
     status = db.Column(db.Boolean, default=False)
-    offer_price = db.Column(
-        db.Float(100), db.ForeignKey('job.pay'), nullable=False)
-    final_price = db.Column(db.Float(100), nullable=False)
+    offer_price = db.Column(db.Float, db.ForeignKey('job.pay'), nullable=False)
+    final_price = db.Column(db.Float, nullable=True)
 
+    # relaciones
+    resume = db.relationship('Resume', back_populates='bookings')
     user = db.relationship('User', back_populates='bookings')
     job = db.relationship(
         'Job', back_populates='bookings', foreign_keys=[job_id])
 
-    def __init__(self, job_id, user_id, status, offer_price, final_price, **kwargs):
+    def __init__(self, job_id, user_id, status, offer_price, resume_id, final_price, **kwargs):
         super().__init__(**kwargs)
         self.job_id = job_id
+        self.resume_id = resume_id
         self.user_id = user_id
         self.status = status
         self.offer_price = offer_price
@@ -34,7 +38,8 @@ class Booking(Base):
             'user_id': self.user_id,
             'status': self.status,
             'offer_price': self.offer_price,
-            'final_price': self.final_price
+            'final_price': self.final_price,
+            "resume_id": self.resume.id
         }
 
     def save(self):
