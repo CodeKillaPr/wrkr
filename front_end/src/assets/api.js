@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Configuración base de Axios
 const api = axios.create({
-  baseURL: "http://127.0.0.1:5000", // Reemplaza con la URL de tu backend
+  baseURL: "https://wrkr.onrender.com", // Reemplaza con la URL de tu backend
   headers: {
     "Content-Type": "application/json",
   },
