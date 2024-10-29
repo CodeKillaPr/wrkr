@@ -4,4 +4,4 @@ services:
     env: python
     plan: free
     buildCommand: "pip install -r back_end/requirements.txt"
-    startCommand: "python3 back_end/app.py"
+    startCommand: "pip install --upgrade pip && python3 back_end/app.py"
