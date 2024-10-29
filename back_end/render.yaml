@@ -2,6 +2,7 @@ services:
   - type: web
     name: wrkr
     env: python
+    pythonVersion: "3.11.10"
     plan: free
     buildCommand: "pip install -r back_end/requirements.txt"
-    startCommand: "pip install --upgrade pip && python3 back_end/app.py"
+    startCommand: "python3 back_end/app.py"
