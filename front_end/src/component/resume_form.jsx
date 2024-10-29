@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { createResume } from "../assets/api.js"; // Import createResume function
 import PropTypes from "prop-types";
+import { createBooking } from "../assets/api.js";
 
-function ResumeForm({ token, onSubmit }) {
+function ResumeForm({ token, onSubmit, job_id }) {
   const [resumeData, setResumeData] = useState({
     title: "",
     description: "",
@@ -21,17 +22,27 @@ function ResumeForm({ token, onSubmit }) {
   const handleResumeSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await createResume(resumeData, token);
-      console.log("Resume created successfully:", response);
+      const resumeResponse = await createResume(resumeData, token);
+      const resume_id = resumeResponse.resume.id;
+
+      console.log("Resume created successfully:", resumeResponse);
+
+      // Use the resume ID to create the booking
+      const bookingResponse = await createBooking({
+        job_id,
+        resume_id,
+        token,
+      });
+      console.log("Booking created successfully:", bookingResponse);
     } catch (error) {
-      console.error("Error creating resume:", error.message);
+      console.error("Error creating resume or booking:", error.message);
     }
     onSubmit();
   };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen dark">
-      <div className="w-full max-w-md border-4 border-blue-300/70 bg-gray-800/90 rounded-lg hover:shadow-2xl hover:shadow-sky-500 duration-1000 p-6">
+      <div className="w-full max-w-md border-4 border-blue-300/70 bg-gray-800/90 rounded-lg hover:shadow-[0_0_20px_rgba(0,183,255,0.5)] duration-1000 p-6">
         <h2 className="text-2xl font-bold text-gray-200 mb-4">
           Professional Pitch
         </h2>
@@ -39,16 +50,27 @@ function ResumeForm({ token, onSubmit }) {
           <h1 className="text-white font-bold text-lg">Title</h1>
           <input
             name="title"
-            placeholder="ex. Software Engineer, Data Analyst"
+            placeholder="ex. Software Engineer, etc."
             className="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="text"
             value={resumeData.title}
             onChange={handleChange}
           />
+
+          <h1 className="text-white font-bold text-lg">Jobs Title</h1>
+          <input
+            name="job_titles"
+            placeholder="ex. Other Job Title, etc."
+            className="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
+            type="text"
+            value={resumeData.job_titles}
+            onChange={handleChange}
+          />
+
           <h1 className="text-white font-bold text-lg">Description</h1>
           <input
             name="description"
-            placeholder="ex. Full Stack Developer with 5 years of experience"
+            placeholder="ex. Full Stack Developer with 5 years etc."
             className="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="text"
             value={resumeData.description}
@@ -66,7 +88,7 @@ function ResumeForm({ token, onSubmit }) {
           <h1 className="text-white font-bold text-lg">Educación</h1>
           <input
             name="education"
-            placeholder="ex. Universidad de Buenos Aires  Ingeniería en Informática"
+            placeholder="ex. Universidad de Buenos Aires etc."
             className="bg-gray-700 text-gray-200 border-0 rounded-md p-2 mb-4 focus:bg-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150"
             type="text"
             value={resumeData.education}
@@ -87,6 +109,7 @@ function ResumeForm({ token, onSubmit }) {
 ResumeForm.propTypes = {
   token: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  job_id: PropTypes.string.isRequired,
 };
 
 export default ResumeForm;

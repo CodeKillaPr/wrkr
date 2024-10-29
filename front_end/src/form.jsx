@@ -65,7 +65,7 @@ function Form() {
         <Pattern />
       </PatternWrapper> */}
       <div className="wrapper bg-gradient-to-tl from-gray-500 via-gray-600 to-gray-700">
-        <div className="absolute xs:left-[0rem] xs:h-[15rem] xs:top-[1rem] sm:top-[15rem] sm:left-[18rem] lg:left-[35rem] lg:top-[23rem] opacity-[100%]">
+        <div className="fixed xs:left-[0rem] xs:h-[15rem] xs:top-[1rem] sm:left-[0rem] sm:top-[0rem] md:top-[15rem] md:left-[2rem] lg:left-[10rem] lg:top-[15rem] xl:left-[20rem] xl:top-[20rem] opacity-[100%] duration-300">
           <MyNameIs />
         </div>
         <div className="card-switch">

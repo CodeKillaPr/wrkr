@@ -73,7 +73,11 @@ const createJob = async (jobData, token) => {
 const getJobs = async () => {
   try {
     const response = await api.get("/jobs");
-    return response.data;
+    // Asegúrate de que response.data.jobs sea un array
+    if (!Array.isArray(response.data.jobs)) {
+      throw new Error("La respuesta de getJobs no es un array");
+    }
+    return response.data.jobs;
   } catch (error) {
     throw new Error(error.response?.data?.description || "Error fetching jobs");
   }
@@ -108,11 +112,15 @@ const getJobCount = async () => {
 export { createJob, getJobs, getJobById, getJobCount };
 
 // Función para crear una reserva (Booking)
-const createBooking = async (bookingData, token) => {
+const createBooking = async ({ job_id, resume_id, token }) => {
   try {
-    const response = await api.post("/booking", bookingData, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await api.post(
+      "/booking",
+      { job_id, resume_id },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
     return response.data;
   } catch (error) {
     throw new Error(

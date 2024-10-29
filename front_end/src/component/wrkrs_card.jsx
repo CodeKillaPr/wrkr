@@ -15,6 +15,10 @@ function Employs() {
     };
 
     fetchResumes();
+
+    const intervalId = setInterval(fetchResumes, 5000);
+
+    return () => clearInterval(intervalId); // Limpia el intervalo cuando el componente se desmonte
   }, []);
 
   return (

@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import maplibregl from "maplibre-gl"; // Importar maplibregl
 import "./App.css";
-import axios from "axios";
 import BookinCard from "./component/booking_card";
 import ResumeForm from "./component/resume_form";
+import { getJobs } from "./assets/api"; // Importar getJobs
 
 function Worker() {
   const [showJobList, setShowJobList] = useState(false); // Estado para controlar la visibilidad de la lista de empleos
   const [jobs, setJobs] = useState([]); // Estado para almacenar la lista de trabajos
   const [selectedJob, setSelectedJob] = useState(null); // Estado para almacenar el trabajo seleccionado
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token"); // Obtener el token del localStorage
   const [showResumeForm, setShowResumeForm] = useState(false); // Estado para controlar la visibilidad del formulario de currículum
 
   const handleAcceptJob = () => {
@@ -25,16 +25,24 @@ function Worker() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("/api/jobs");
-        console.log("Jobs fetched:", response.data.jobs); // Mensaje de depuración
-        setJobs(response.data.jobs);
+        const newJobs = await getJobs();
+
+        // Comparar los datos actuales con los nuevos datos
+        if (JSON.stringify(jobs) !== JSON.stringify(newJobs)) {
+          console.log("Jobs updated:", newJobs); // Mensaje de depuración
+          setJobs(newJobs);
+        }
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
     };
 
     fetchJobs();
-  }, []);
+
+    const intervalId = setInterval(fetchJobs, 5000);
+
+    return () => clearInterval(intervalId); // Limpia el intervalo cuando el componente se desmonte
+  }, [jobs]);
 
   const handleViewJob = (job) => {
     setSelectedJob(job); // Actualiza el trabajo seleccionado para mostrar BookingCard
@@ -192,7 +200,6 @@ function Worker() {
                 </ul>
               </div>
             )}
-
             {selectedJob && !showResumeForm && (
               <div
                 className={`fixed inset-0 bg-black bg-opacity-50 flex transition-all items-center justify-center z-50 duration-500 ${
@@ -210,12 +217,16 @@ function Worker() {
                 </div>
               </div>
             )}
-
             {showResumeForm && (
               <div className="fixed inset-0 w-full h-full items-center justify-center">
-                <ResumeForm token={token} onSubmit={handleResumeSubmit} />
+                <ResumeForm
+                  token={token}
+                  onSubmit={handleResumeSubmit}
+                  job_id={selectedJob.id}
+                />
               </div>
             )}
+            s
           </main>
 
           <aside

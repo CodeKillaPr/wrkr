@@ -10,7 +10,13 @@ function AllButton({ onJobPostClick, onStatisticClick, onBookingClick }) {
   return (
     <div className="relative top-52 flex h-full w-full items-center justify-center">
       <div className="profileCard_container relative border-spacing-4 rounded-full border-2 border-dashed p-10 duration-300 hover:border-blue-400">
-        <button className="profile_item absolute -top-[4px] left-[45px] cursor-pointer  rounded-full border border-teal-400/50  bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[0.5rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95">
+        <button className="group profile_item absolute -top-[4px] left-[45px] cursor-pointer  rounded-full border border-teal-400/50  bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[0.5rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95">
+          <div
+            className="absolute text-sm text-gray-500 ease-in-out duration-300 bg-white border border-gray-200 rounded-lg shadow-sm  dark:text-gray-400 dark:border-teal-600 dark:bg-teal-500/60 opacity-0 group-hover:opacity-100 -translate-x-2 -translate-y-6 group-hover:-translate-y-[2.3rem] "
+            id="popover-top"
+          >
+            <h1 className="m-1 text-white">Market</h1>
+          </div>
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-teal-400 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +35,13 @@ function AllButton({ onJobPostClick, onStatisticClick, onBookingClick }) {
           </span>
         </button>
 
-        <button className="profile_item absolute -top-[4px] right-[45px] cursor-pointer rounded-full border border-gray-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[-1rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95">
+        <button className="group profile_item absolute -top-[4px] right-[45px] cursor-pointer rounded-full border border-gray-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[-1rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95">
+          <div
+            className="absolute text-sm text-gray-500 ease-in-out duration-300 bg-white border border-gray-200 rounded-lg shadow-sm  dark:text-gray-400 dark:border-gray-600 dark:bg-gray-500/60 opacity-0 group-hover:opacity-100 -translate-x-2 -translate-y-6 group-hover:-translate-y-[2.3rem] "
+            id="popover-top"
+          >
+            <h1 className="m-1 text-white">Setting</h1>
+          </div>
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-gray-500 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -55,8 +67,14 @@ function AllButton({ onJobPostClick, onStatisticClick, onBookingClick }) {
 
         <button
           onClick={onStatisticClick}
-          className="profile_item absolute -left-4 top-20 cursor-pointer rounded-full border border-red-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[1rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95"
+          className="group profile_item absolute -left-4 top-20 cursor-pointer rounded-full border border-red-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[1rem] hover:-translate-y-[0.5rem] hover:scale-125 active:scale-95"
         >
+          <div
+            className="absolute text-sm text-gray-500 ease-in-out duration-300 bg-white border border-gray-200 rounded-lg shadow-sm  dark:text-gray-400 dark:border-red-600 dark:bg-red-500/60 opacity-0 group-hover:opacity-100 -translate-x-[1rem] -translate-y-[-0.3rem] group-hover:-translate-x-[5rem] "
+            id="popover-top"
+          >
+            <h1 className="m-1 text-white">Statistics</h1>
+          </div>
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-red-500 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -96,10 +114,16 @@ function AllButton({ onJobPostClick, onStatisticClick, onBookingClick }) {
 
         <button
           onClick={onBookingClick}
-          className={`profile_item absolute -left-0 bottom-8 cursor-pointer rounded-full border border-orange-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[0.5rem] hover:-translate-y-[-0.5rem] hover:scale-125 active:scale-95 ${
+          className={`group profile_item absolute -left-0 bottom-8 cursor-pointer rounded-full border border-orange-400/50 bg-cover p-[2px] transition-all duration-100 hover:-translate-x-[0.5rem] hover:-translate-y-[-0.5rem] hover:scale-125 active:scale-95 ${
             hasBooking ? "animate-bounce" : ""
           }`}
         >
+          <div
+            className="absolute text-sm text-gray-500 ease-in-out duration-300 bg-white border border-orange-200 rounded-lg shadow-sm  dark:text-gray-400 dark:border-orange-500 dark:bg-red-400/60 opacity-0 group-hover:opacity-100 -translate-x-[1rem] -translate-y-[-0.3rem] group-hover:-translate-x-[5rem] "
+            id="popover-top"
+          >
+            <h1 className="m-1 text-white">Bookings</h1>
+          </div>
           <span className="z-[2] block h-[40px] w-[40px] rounded-full bg-orange-400 p-2 transition-all duration-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
