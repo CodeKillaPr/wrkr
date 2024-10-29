@@ -4,4 +4,4 @@ services:
     env: python
     plan: free
     buildCommand: "pip install -r back_end/requirements.txt"
-    startCommand: "gunicorn back_end.app:app"
+    startCommand: "gunicorn app.py"
