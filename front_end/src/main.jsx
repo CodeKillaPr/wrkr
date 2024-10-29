@@ -8,7 +8,7 @@ import "./index.css";
 import Employs from "./component/wrkrs_card.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <Router>
+  <Router basename="/wrkr-web/">
     <Routes>
       <Route path="/wrkrcard" element={<Employs />} />
       <Route path="/patron" element={<Patron />} />
