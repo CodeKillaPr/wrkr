@@ -8,19 +8,16 @@ from database.firebase_config import firedb
 from flask_jwt_extended import get_jwt, jwt_required, get_jwt_identity
 import os
 
-booking_api = Blueprint('booking_api', __name__)
+booking_api = Blueprint("booking_api", __name__)
 bcrypt = Bcrypt()
 
 
-@booking_api.route('/booking', methods=['POST'])
+@booking_api.route("/booking", methods=["POST"])
 @jwt_required()
 def create_booking():
-    # if not request.json or 'user_id' not in request.json or 'job_id' not in request.json:
-    #     abort(400, description="Missing required fields")
-
     user_id = get_jwt_identity()
-    resume_id = get_jwt_identity()
-    job_id = request.json.get('job_id')
+    resume_id = request.json.get("resume_id")
+    job_id = request.json.get("job_id")
 
     if not User.query.get(user_id):
         abort(404, description="User not found")
@@ -28,8 +25,11 @@ def create_booking():
     if not Job.query.get(job_id):
         abort(404, description="Job not found")
 
-    offer_price = request.json.get('offer_price', 0)
-    final_price = request.json.get('final_price')
+    if not resume_id:
+        abort(400, description="Missing resume_id")
+
+    offer_price = request.json.get("offer_price", 0)
+    final_price = request.json.get("final_price")
 
     booking = Booking(
         resume_id=resume_id,
@@ -37,7 +37,7 @@ def create_booking():
         user_id=user_id,
         status=False,
         offer_price=offer_price,
-        final_price=final_price
+        final_price=final_price,
     )
     booking.save()
 
@@ -49,12 +49,9 @@ def create_booking():
             "resume_id": booking.resume_id,
             "status": booking.status,
             "offer_price": booking.offer_price,
-            "final_price": booking.final_price
+            "final_price": booking.final_price,
         }
 
-        firedb.collection('bookings').document(
-            str(booking.id)).set(booking_data)
+        firedb.collection("bookings").document(str(booking.id)).set(booking_data)
 
-    print(booking.job)
-    print(booking.job.description)
     return jsonify({"msg": "Booking created successfully"}), 201

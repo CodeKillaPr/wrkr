@@ -9,6 +9,7 @@ from api.booking_api import booking_api
 from database.db import db
 from config import DevelopmentConfig, ProductionConfig
 from dotenv import load_dotenv
+
 # Importar firedb desde firebase_config.py
 from database.firebase_config import firedb
 
@@ -19,12 +20,14 @@ app = Flask(__name__)
 CORS(app)
 
 # Seleccionar la configuración según el entorno
-environment_config = DevelopmentConfig if os.environ.get(
-    'ENV') == 'development' else ProductionConfig
+environment_config = (
+    DevelopmentConfig if os.environ.get(
+        "ENV") == "development" else ProductionConfig
+)
 app.config.from_object(environment_config)
 
 # Inicializar SQLAlchemy solo en desarrollo
-if os.environ.get('ENV') == 'development':
+if os.environ.get("ENV") == "development":
     db.init_app(app)
     migrate = Migrate(app, db)
 
@@ -37,7 +40,7 @@ app.register_blueprint(job_api)
 app.register_blueprint(booking_api)
 
 # Crear tablas en la base de datos en modo desarrollo
-if os.environ.get('ENV') == 'development':
+if os.environ.get("ENV") == "development":
     with app.app_context():
         db.create_all()
 

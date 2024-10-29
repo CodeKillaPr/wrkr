@@ -5,19 +5,18 @@ import os
 
 
 class Booking(Base):
-    job_id = db.Column(db.String, db.ForeignKey('job.id'), nullable=False)
-    resume_id = db.Column(db.String, db.ForeignKey(
-        'resume.id'), nullable=False)
-    user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
+    job_id = db.Column(db.String, db.ForeignKey("job.id"), nullable=False)
+    resume_id = db.Column(db.String, db.ForeignKey("resume.id"), nullable=True)
+    user_id = db.Column(db.String, db.ForeignKey("user.id"), nullable=False)
     status = db.Column(db.Boolean, default=False)
-    offer_price = db.Column(db.Float, db.ForeignKey('job.pay'), nullable=False)
-    final_price = db.Column(db.Float, nullable=True)
-
+    offer_price = db.Column(
+        db.Float(100), db.ForeignKey("job.pay"), nullable=True)
+    final_price = db.Column(db.Float(100), nullable=True)
     # relaciones
-    resume = db.relationship('Resume', back_populates='bookings')
-    user = db.relationship('User', back_populates='bookings')
+    resume = db.relationship("Resume", back_populates="bookings")
+    user = db.relationship("User", back_populates="bookings")
     job = db.relationship(
-        'Job', back_populates='bookings', foreign_keys=[job_id])
+        "Job", back_populates="bookings", foreign_keys=[job_id])
 
     def __init__(self, job_id, user_id, status, offer_price, resume_id, final_price, **kwargs):
         super().__init__(**kwargs)
@@ -33,18 +32,18 @@ class Booking(Base):
 
     def to_dict(self):
         return {
-            'id': self.id,
-            'job_id': self.job_id,
-            'user_id': self.user_id,
-            'status': self.status,
-            'offer_price': self.offer_price,
-            'final_price': self.final_price,
-            "resume_id": self.resume.id
+            "id": self.id,
+            "job_id": self.job_id,
+            "user_id": self.user_id,
+            "status": self.status,
+            "offer_price": self.offer_price,
+            "final_price": self.final_price,
+            "resume_id": self.resume_id,
         }
 
     def save(self):
-        if os.environ.get('ENV') == 'production':
-            job_ref = firedb.collection('jobs').document(str(self.id))
+        if os.environ.get("ENV") == "production":
+            job_ref = firedb.collection("jobs").document(str(self.id))
             job_ref.set(self.to_dict())
         else:
             db.session.add(self)

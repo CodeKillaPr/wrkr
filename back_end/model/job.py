@@ -5,7 +5,7 @@ from database.firebase_config import firedb
 
 
 class Job(Base):
-    user_id = db.Column(db.String, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.String, db.ForeignKey("user.id"), nullable=False)
     title = db.Column(db.String(128), nullable=False)
     description = db.Column(db.String(128), nullable=True)
     pay = db.Column(db.Float, nullable=True)
@@ -14,11 +14,11 @@ class Job(Base):
     open_jobs = db.Column(db.Boolean, default=True)
     finalized_jobs = db.Column(db.Boolean, default=False)
 
-    user = db.relationship('User', back_populates='jobs')
+    user = db.relationship("User", back_populates="jobs")
     bookings = db.relationship(
-        'Booking', back_populates='job', foreign_keys='Booking.job_id')
+        "Booking", back_populates="job", foreign_keys="Booking.job_id")
 
-    def __init__(self, user_id, title, description, pay, location, time_frame, open_jobs, finalized_jobs, **kwargs):
+    def __init__(self, user_id, title, description, pay, location, time_frame, open_jobs, finalized_jobs, **kwargs,):
         super().__init__(**kwargs)
         self.user_id = user_id
         self.title = title
@@ -44,12 +44,12 @@ class Job(Base):
             "location": self.location,
             "time_frame": self.time_frame,
             "open_jobs": self.open_jobs,
-            "finalized_jobs": self.finalized_jobs
+            "finalized_jobs": self.finalized_jobs,
         }
 
     def save(self):
-        if os.environ.get('ENV') == 'production':
-            job_ref = firedb.collection('jobs').document(str(self.id))
+        if os.environ.get("ENV") == "production":
+            job_ref = firedb.collection("jobs").document(str(self.id))
             job_ref.set(self.to_dict())
         else:
             db.session.add(self)
