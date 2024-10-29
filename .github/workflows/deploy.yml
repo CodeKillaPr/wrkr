@@ -18,6 +18,12 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Clear node_modules and package-lock.json
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+        working-directory: front_end
+
       - name: Install dependencies
         run: npm install
         working-directory: front_end
