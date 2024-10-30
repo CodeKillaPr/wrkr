@@ -950,4 +950,4 @@ In order to be iterable, non-array objects must have a [Symbol.iterator]() metho
     cursor: pointer;
     z-index: 2;
   }
-`;Oj(document.getElementById("root")).render(ie.jsx(A7,{basename:"/wrkr-web/",children:ie.jsxs(S7,{children:[ie.jsx(Yh,{path:"/",element:ie.jsx(Ybe,{})}),ie.jsx(Yh,{path:"/wrkrcard",element:ie.jsx(BB,{})}),ie.jsx(Yh,{path:"/patron",element:ie.jsx(Gxe,{})}),ie.jsx(Yh,{path:"/wrkr",element:ie.jsx(mW,{})}),ie.jsx(Yh,{path:"/revenue",element:ie.jsx(jB,{})})]})}));
+`;Oj(document.getElementById("root")).render(ie.jsx(A7,{children:ie.jsxs(S7,{children:[ie.jsx(Yh,{path:"/wrkrcard",element:ie.jsx(BB,{})}),ie.jsx(Yh,{path:"/patron",element:ie.jsx(Gxe,{})}),ie.jsx(Yh,{path:"/wrkr",element:ie.jsx(mW,{})}),ie.jsx(Yh,{path:"/",element:ie.jsx(Ybe,{})}),ie.jsx(Yh,{path:"/revenue",element:ie.jsx(jB,{})})]})}));
