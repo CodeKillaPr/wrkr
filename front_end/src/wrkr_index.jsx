@@ -174,7 +174,7 @@ function Worker() {
               >
                 <header className="sticky top-[-0rem] z-10 w-full bg-white dark:bg-gray-800">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 p-5 mb-0">
-                    Lista de Empleos
+                    Jobs Listings
                   </h2>
                 </header>
                 <ul className="space-y-4 p-5">
@@ -193,7 +193,7 @@ function Worker() {
                         className="mt-2 border border-blue-400/30 bg-blue-500/20 text-white py-1 px-3 rounded  hover:bg-blue-500/40 hover:scale-105 duration-200"
                         onClick={() => handleViewJob(job)} // Manejador del botón "Ver"
                       >
-                        Ver
+                        View Details
                       </button>
                     </li>
                   ))}

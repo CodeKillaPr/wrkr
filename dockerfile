@@ -1,26 +1,30 @@
-# Use an official Python runtime as a parent image
+# Usa una imagen base oficial de Python
 FROM python:3.9-slim
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+# Establece el directorio de trabajo en el contenedor
+WORKDIR /app
 
-# Copy the requirements file into the container
-COPY back_end/requirements.txt ./
+# Copia los archivos de requisitos a la imagen del contenedor
+COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
+# Instala las dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the backend code into the container
+# Copia el contenido del backend a la imagen del contenedor
 COPY back_end/ .
 
-# Set environment variables
-ENV ENV=production
-ENV FIREBASE_CREDENTIALS_PATH=back_end/testing-fec9a-firebase-adminsdk-h93xm-bbe2a6f5d2.json
-ENV FIREBASE_DATABASE_URL=https://testing-fec9a.firebaseio.com/
-ENV JWT_SECRET_KEY=tu-clave-secreta
+# Copia el archivo de credenciales de Firebase a la imagen del contenedor
 
-# Make port 5000 available to the world outside this container
-EXPOSE 5000
+# Establece las variables de entorno necesarias
+ENV ENV=development
+ENV DEV_SQLALCHEMY_DATABASE_URI=sqlite:///development.db
 
-# Run the application
+
+# Establece la variable de entorno PORT que Cloud Run utilizará
+ENV PORT=8080
+
+# Expone el puerto en el que la aplicación correrá
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación
 CMD ["python", "app.py"]

@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Configuración base de Axios
 const api = axios.create({
-  baseURL: "https://wrkr.onrender.com", // Reemplaza con la URL de tu backend
+  baseURL: "https://wrkr-app-39363294871.us-central1.run.app", // Reemplaza con la URL de tu backend
   headers: {
     "Content-Type": "application/json",
   },
@@ -22,10 +22,16 @@ const registerUser = async (userData) => {
 
 const loginUser = async (credentials) => {
   try {
-    const response = await api.post("/login", credentials);
+    const response = await api.post("/login", {
+      email: credentials.email,
+      password: credentials.password,
+    });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.description || "Error logging in");
+    console.error("Login Error Response:", error.response);
+    throw new Error(
+      error.response?.data?.description || "Error al iniciar sesión"
+    );
   }
 };
 

@@ -30,8 +30,8 @@ function Graph() {
         label: "Datos de Contratos",
         data: [8, 10, 40, 8, 16, 12],
         fill: false,
-        backgroundColor: "#3772d1",
-        borderColor: "#3772d1",
+        backgroundColor: "#00b3ff",
+        borderColor: "#00b3ff",
       },
     ],
   };
@@ -77,7 +77,7 @@ function Graph() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-4 bg-gray-700 rounded-lg h-52">
+    <div className="w-full max-w-4xl mx-auto p-4 bg-red-500 rounded-lg h-52">
       {/* Ajustar la altura de la gráfica */}
       <Line data={data} options={options} />
     </div>

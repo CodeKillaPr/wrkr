@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "wrkr-app-735cc",
+    "wrkr-app": "wrkr-app-735cc"
+  },
+  "targets": {},
+  "etags": {}
+}

@@ -190,7 +190,7 @@ function Patron() {
               >
                 <header className="sticky top-[-0rem] z-10 w-full bg-white dark:bg-gray-800">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 p-5 mb-0">
-                    Lista de Empleados
+                    Wrkrs List
                   </h2>
                   <button
                     onClick={handleBackClick}

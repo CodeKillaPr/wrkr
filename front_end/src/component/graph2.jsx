@@ -50,7 +50,7 @@ const Job = ({ jobCount }) => {
     labels: months,
     datasets: [
       {
-        label: "Datos de Empleos",
+        label: "Jobs Data",
         data: jobCounts, // Initialize with jobCount for the current month
         fill: false,
         backgroundColor: "#00b3ff",
@@ -72,7 +72,7 @@ const Job = ({ jobCount }) => {
       },
       title: {
         display: true,
-        text: "Gráfico Lineal de Empleos",
+        text: "Jobs Line Graph",
         color: "white",
       },
     },
