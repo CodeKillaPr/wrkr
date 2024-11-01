@@ -3,20 +3,24 @@ from model.base import Base
 from sqlalchemy.orm import relationship
 import os
 from database.firebase_config import firedb
+from sqlalchemy import Column, Integer, ForeignKey, String, Text
 
 
-class Resume(Base):
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    title = db.Column(db.String(100))
-    description = db.Column(db.String(1000))
-    job_titles = db.Column(db.Text)  # Títulos de trabajo
-    skills = db.Column(db.Text)  # Habilidades
-    education = db.Column(db.Text)  # Educación
+class Resume(db.Model):
+    __tablename__ = "resume"
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("user.id"))
+    title = Column(String(100))
+    description = Column(String(1000))
+    job_titles = Column(Text)  # Títulos de trabajo
+    skills = Column(Text)  # Habilidades
+    education = Column(Text)  # Educación
 
-    user = db.relationship("User", back_populates="resumes")
-    bookings = db.relationship("Booking", back_populates="resume")
+    user = relationship("User", back_populates="resumes",
+                        foreign_keys=[user_id])
+    bookings = relationship("Booking", back_populates="resume")
 
-    def __init__(self, user_id, title, description, job_titles="", skills="", education="", **kwargs,):
+    def __init__(self, user_id, title, description, job_titles="", skills="", education="", **kwargs):
         super().__init__(**kwargs)
         self.user_id = user_id
         self.title = title

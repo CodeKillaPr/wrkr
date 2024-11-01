@@ -7,9 +7,7 @@ def initialize_firebase():
     if os.environ.get('ENV') == 'production':
         cred = credentials.Certificate(
             os.environ.get('FIREBASE_CREDENTIALS_PATH'))
-        firebase_admin.initialize_app(cred, {
-            'databaseURL': os.environ.get('FIREBASE_DATABASE_URL')
-        })
+        firebase_admin.initialize_app(cred)
         return firestore.client()
     return None
 
