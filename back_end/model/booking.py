@@ -1,21 +1,23 @@
 from model.base import Base
 from database.db import db
 from database.firebase_config import firedb
+from sqlalchemy import Column, String, Boolean, Float, ForeignKey
+from sqlalchemy.orm import relationship
 import os
 
 
 class Booking(Base):
-    job_id = db.Column(db.String, db.ForeignKey("job.id"), nullable=False)
-    resume_id = db.Column(db.String, db.ForeignKey("resume.id"), nullable=True)
-    user_id = db.Column(db.String, db.ForeignKey("user.id"), nullable=False)
-    status = db.Column(db.Boolean, default=False)
-    offer_price = db.Column(
-        db.Float(100), db.ForeignKey("job.pay"), nullable=True)
-    final_price = db.Column(db.Float(100), nullable=True)
+    job_id = Column(String, ForeignKey("job.id"), nullable=False)
+    resume_id = Column(String, ForeignKey("resume.id"), nullable=True)
+    user_id = Column(String, ForeignKey("user.id"), nullable=False)
+    status = Column(Boolean, default=False)
+    offer_price = Column(
+        Float(100), ForeignKey("job.pay"), nullable=True)
+    final_price = Column(Float(100), nullable=True)
     # relaciones
-    resume = db.relationship("Resume", back_populates="bookings")
-    user = db.relationship("User", back_populates="bookings")
-    job = db.relationship(
+    resume = relationship("Resume", back_populates="bookings")
+    user = relationship("User", back_populates="bookings")
+    job = relationship(
         "Job", back_populates="bookings", foreign_keys=[job_id])
 
     def __init__(self, job_id, user_id, status, offer_price, resume_id, final_price, **kwargs):
